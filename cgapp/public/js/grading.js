@@ -57,7 +57,7 @@ function renderCanvas(){
 	ctx.strokeStyle = "#FC5533";
 	ctx.lineWidth = 3/vp.trueScale;
 	ctx.fillStyle = "#FC5533";
-	ctx.font = 20/vp.trueScale + "px Arial";
+	ctx.font = "bold " + (24/vp.trueScale) + "px Arial";
 	
 	for(var s = 0; s < cs.length; s++){
 		var shape = cs[s];
@@ -83,7 +83,7 @@ function renderCanvas(){
 		avgY /= shape.length;
 		var text = "" + (s + 1);
 		var textwidth = ctx.measureText(text).width;
-		ctx.fillText(text, avgX - textwidth / 2, avgY);
+		ctx.fillText(text, avgX - textwidth / 2, avgY + ((24/vp.trueScale) / 2));
 	}
 }
 
@@ -129,17 +129,25 @@ function dispatchNewImage(data){
 		if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
 			var result = JSON.parse(xhr.responseText);
 			console.log(result);
+			$("#doc-content").removeClass("loading");
 			processNewImage(result);
 		}
 	}
+	$("#doc-content").addClass("loading");
 	xhr.send('{"img":"'+data+'"}');
 }
 
 function processNewImage(result){
 	var shapes = [];
+	var docProto = $("#document-proto");
 	for(var ibox in result){
 		var box = result[ibox];
 		var shape = [];
+		var doc = docProto.clone();
+		doc.attr("id", "");
+		doc.find(".count").text("#"+(parseInt(ibox)+1));
+		doc.find(".output").html(katex.renderToString(box["latex_anno"]));
+		doc.appendTo("#doc-content");
 		for(var p = 0; p < box.points.length; p++){
 			shape.push(box.points[p][0]);
 		}

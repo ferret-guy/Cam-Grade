@@ -6,7 +6,6 @@ html, body{
 	overflow: hidden;
 }
 h1, h2, h3{
-	font-family: Trebuchet MS, sans-serif;
 	margin-top: 4px;
 	margin-bottom: 6px;
 }
@@ -17,9 +16,6 @@ h2{
 h3{
 	margin-top: 1px;
 	margin-bottom: 2px;
-}
-div, span{
-	font-family: Trebuchet MS, sans-serif;
 }
 p, ul, ol{
 	margin: 2px 0px;
@@ -46,7 +42,7 @@ p, ul, ol{
 	right: 0;
 	margin: auto;
 	background-color: #777;
-	background-image: url("noscripts.png");
+	background-image: url("/img/noscripts.png");
 	background-repeat: no-repeat;
 	background-position: center;
 	width: 100px;
@@ -56,6 +52,7 @@ p, ul, ol{
 	vertical-align: middle;
 }
 #cam-instructions{
+	font-family: Trebuchet MS, sans-serif;
 	display: none;
 }
 #cam-instructions input{
@@ -84,6 +81,7 @@ p, ul, ol{
 }
 
 #doc-container{
+	font-family: Trebuchet MS, sans-serif;
 	display: flex;
 	flex-direction: column;
 	right: 0px;
@@ -119,14 +117,28 @@ div#doc-content{
 	font-size: 0.9em;
 	overflow-x: hidden;
 	overflow-y: auto;
-	background: #f0f0f0;
+	background-color: #f0f0f0;
 	padding: 0 0 0 6px;
 }
 #doc-content .document{
-	height: 100px;
 	border-bottom: 3px solid #000;
 	padding: 6px 8px;
 	background: #fff;
+}
+#doc-content .document .count{
+	font-size: 1.25em;
+	font-weight: bold;
+}
+#doc-content .document .output{
+	font-size: 2em;
+	font-family: "Times New Roman", Times, serif;
+	margin: 10px 0;
+}
+#doc-content.loading{
+	background-color: #e0e0e0;
+	background-image: url("/img/loading.gif");
+	background-position: center;
+	background-repeat: no-repeat;
 }
 div#doc-related-actions{
 	padding: 0 0 0 6px;
