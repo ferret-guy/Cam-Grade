@@ -123,6 +123,9 @@ function dispatchNewImage(data){
 	
 	if(window.activeXHR !== null)
 		window.activeXHR.abort();
+	window.canvasShapes = [];
+	renderCanvas();
+	$("#doc-content").html("");
 	
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", 'https://cam-grade-func.azurewebsites.net/api/Get-Equ', true);
@@ -153,6 +156,7 @@ function processNewImage(result){
 		var doc = docProto.clone();
 		doc.attr("id", "");
 		doc.find(".count").text("#"+(parseInt(ibox)+1));
+		doc.find(".confidence").text("Confidence: "+(parseFloat(box['latex_confidence'])*100)+"%");
 		doc.find(".output").html(katex.renderToString(box["latex_anno"]));
 		doc.appendTo("#doc-content");
 		for(var p = 0; p < box.points.length; p++){

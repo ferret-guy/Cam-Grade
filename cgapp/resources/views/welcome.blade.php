@@ -14,6 +14,7 @@
 		<div class="document" id="document-proto">
 			<span class="count"></span>
 			<div class="output"></div>
+			<div class="confidence"></div>
 		</div>
 		<div id="cam-container">
 			<div id="cam-content">
