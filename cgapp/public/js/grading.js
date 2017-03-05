@@ -5,6 +5,7 @@ window.videoParams = {
 		if(typeof value === 'number'){
 			this._width = value;
 			autosize();
+			renderCanvas();
 		}else{
 			throw new Error("sourceWidth must be number");
 		}
@@ -15,10 +16,12 @@ window.videoParams = {
 		if(typeof value === 'number'){
 			this._height = value;
 			autosize();
+			renderCanvas();
 		}else{
 			throw new Error("sourceHeight must be number");
 		}
 	},
+	trueScale: 1,
 	_rotation: 0,
 	get rotation(){return this._rotation;},
 	set rotation(value){
@@ -40,6 +43,38 @@ window.videoParams = {
 	flipH: false
 }
 
+window.canvasShapes = [];
+
+function renderCanvas(){
+	var vp = window.videoParams;
+	var cs = window.canvasShapes;
+	
+	var canvas = $("#cam-canvas")[0]
+	canvas.width = vp.sourceWidth;
+	canvas.height = vp.sourceHeight;
+	var ctx = canvas.getContext("2d");
+	
+	ctx.strokeStyle = "#FC5533";
+	ctx.lineWidth = 3/vp.trueScale;
+	
+	for(var s = 0; s < cs.length; s++){
+		var shape = cs[s];
+		var lPoint = shape[shape.length-1];
+		
+		ctx.beginPath();
+		ctx.moveTo(lPoint[0], lPoint[1]);
+		
+		for(var p = 0; p < shape.length; p++){
+			var point = shape[p];
+			
+			ctx.lineTo(point[0], point[1]);
+		}
+		
+		ctx.stroke();
+		ctx.closePath();
+	}
+}
+
 //Autoscale video and maintain aspect ratio
 function autosize(){
 	var Outer = $("#cam-container");
@@ -59,11 +94,12 @@ function autosize(){
 		InnerWidth = vp.sourceWidth;
 		InnerHeight = vp.sourceHeight;
 	}
+	vp.trueScale = InnerHeight / vp.sourceHeight;
 	Inner.css("height", String(InnerHeight)+"px");
 	Inner.css("width", String(InnerWidth)+"px");
 }
 
-function processNewImage(data){
+function dispatchNewImage(data){
 	$("#cam-content").css("background", "#fff");
 	$("#cam-actualinstructions").hide();
 	var cframe = $("#cam-frame");
@@ -71,6 +107,34 @@ function processNewImage(data){
 	bcframe = cframe[0];
 	window.videoParams.sourceWidth = bcframe.naturalWidth;
 	window.videoParams.sourceHeight = bcframe.naturalHeight;
+	
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", 'https://cam-grade-func.azurewebsites.net/api/Get-Equ', true);
+	
+	xhr.setRequestHeader("Content-type", "application/json");
+	
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+			var result = JSON.parse(xhr.responseText);
+			console.log(result);
+			processNewImage(result);
+		}
+	}
+	xhr.send('{"img":"'+data+'"}');
+}
+
+function processNewImage(result){
+	var shapes = [];
+	for(var ibox in result){
+		var box = result[ibox];
+		var shape = [];
+		for(var p = 0; p < box.points.length; p++){
+			shape.push(box.points[p][0]);
+		}
+		shapes.push(shape);
+	}
+	window.canvasShapes = shapes;
+	renderCanvas();
 }
 
 //Initialization junk
@@ -102,7 +166,7 @@ $(function(){
 			var fr = new FileReader();
 			fr.readAsDataURL(file)
 			fr.onload = function(){
-				processNewImage(fr.result);
+				dispatchNewImage(fr.result);
 			};
 		}
 	});
@@ -113,7 +177,7 @@ $(function(){
 			var fr = new FileReader();
 			fr.readAsDataURL(file)
 			fr.onload = function(){
-				processNewImage(fr.result);
+				dispatchNewImage(fr.result);
 			};
 		}
 	});
