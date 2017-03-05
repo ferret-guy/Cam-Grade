@@ -30,7 +30,7 @@ p, ul, ol{
 
 #cam-container {
 	left: 0;
-	right: 600px;
+	right: 452px;
 	background: #ddd;
 	transition: background 0.25s;
 }
@@ -85,7 +85,7 @@ p, ul, ol{
 	display: flex;
 	flex-direction: column;
 	right: 0px;
-	width: 600px;
+	width: 452px;
 	background: #FFF;
 	padding: 0 0 0 6px;
 	color: #222;

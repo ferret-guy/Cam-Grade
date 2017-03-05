@@ -44,6 +44,7 @@ window.videoParams = {
 }
 
 window.canvasShapes = [];
+window.activeXHR = null;
 
 function renderCanvas(){
 	var vp = window.videoParams;
@@ -120,6 +121,9 @@ function dispatchNewImage(data){
 	window.videoParams.sourceWidth = bcframe.naturalWidth;
 	window.videoParams.sourceHeight = bcframe.naturalHeight;
 	
+	if(window.activeXHR !== null)
+		window.activeXHR.abort();
+	
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", 'https://cam-grade-func.azurewebsites.net/api/Get-Equ', true);
 	
@@ -135,11 +139,14 @@ function dispatchNewImage(data){
 	}
 	$("#doc-content").addClass("loading");
 	xhr.send('{"img":"'+data+'"}');
+	
+	window.activeXHR = xhr;
 }
 
 function processNewImage(result){
 	var shapes = [];
 	var docProto = $("#document-proto");
+	$("#doc-content").html("");
 	for(var ibox in result){
 		var box = result[ibox];
 		var shape = [];
