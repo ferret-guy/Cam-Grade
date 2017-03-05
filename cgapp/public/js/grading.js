@@ -56,22 +56,34 @@ function renderCanvas(){
 	
 	ctx.strokeStyle = "#FC5533";
 	ctx.lineWidth = 3/vp.trueScale;
+	ctx.fillStyle = "#FC5533";
+	ctx.font = 20/vp.trueScale + "px Arial";
 	
 	for(var s = 0; s < cs.length; s++){
 		var shape = cs[s];
 		var lPoint = shape[shape.length-1];
+		var avgX = 0;
+		var avgY = 0;
 		
 		ctx.beginPath();
 		ctx.moveTo(lPoint[0], lPoint[1]);
 		
 		for(var p = 0; p < shape.length; p++){
 			var point = shape[p];
+			avgX += point[0];
+			avgY += point[1];
 			
 			ctx.lineTo(point[0], point[1]);
 		}
 		
 		ctx.stroke();
 		ctx.closePath();
+		
+		avgX /= shape.length;
+		avgY /= shape.length;
+		var text = "" + (s + 1);
+		var textwidth = ctx.measureText(text).width;
+		ctx.fillText(text, avgX - textwidth / 2, avgY);
 	}
 }
 

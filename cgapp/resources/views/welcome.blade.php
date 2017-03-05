@@ -49,19 +49,13 @@
 				@endif
 			</div>
 			<div id="doc-content">
-				<div class="document">
-					<span class="count">1</span>
+				<div class="document" id="document-proto">
+					<span class="count"></span>
 					<span class="student"></span>
 					<div class="output"></div>
 					<div class="progress-container">
 						<div class="progress-bar"></div>
 					</div>
-				</div>
-				<div class="document">
-					2
-				</div>
-				<div class="document">
-					3
 				</div>
 			</div>
 			<div id="doc-related-actions">

@@ -164,6 +164,10 @@ div#doc-footer{
 	border-bottom: none;
 }
 
+#document-proto{
+	display: none;
+}
+
 .noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
